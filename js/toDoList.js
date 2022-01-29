@@ -26,7 +26,9 @@ function displayMessages() {
     displayMessage += `
             <li>
             <input type='checkbox' id='item_${index}' ${item.checked ? 'checked' : ''} />
-            <label for="item_${index}">${item.todo}</label>
+            <label class="${item.important ? 'important' : ''}" for="item_${index}">${
+      item.todo
+    }</label>
             </li>
       `;
     todo.innerHTML = displayMessage;
@@ -39,6 +41,21 @@ todo.addEventListener('change', function (e) {
   toDoList.forEach(function (item) {
     if (item.todo === valueLabel) {
       item.checked = !item.checked;
+      localStorage.setItem('todo', JSON.stringify(toDoList));
+    }
+  });
+});
+
+todo.addEventListener('contextmenu', function (e) {
+  e.preventDefault();
+  toDoList.forEach(function (item, index) {
+    if (item.todo === e.target.innerHTML) {
+      if (e.ctrlKey || e.metaKey) {
+        toDoList.splice(index, 1);
+      } else {
+        item.important = !item.important;
+      }
+      displayMessages();
       localStorage.setItem('todo', JSON.stringify(toDoList));
     }
   });
